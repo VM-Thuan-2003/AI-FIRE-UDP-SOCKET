@@ -1,19 +1,51 @@
-# Code Model
+# AI Fire Detection System
 
-This repository contains code for a basic code model, which is a deep learning model that is trained on source code. The model is based on the [Codeium Code Model](https://github.com/codeium/codeium-code-model) and is designed to be used for code completion, code search, and code generation tasks.
+## Overview
 
-## Getting Started
+This project is designed for real-time fire detection using video input. It utilizes UDP sockets for video streaming and a pre-trained model for fire detection.
 
-To get started with the code model, you will need to install the following dependencies:
+## Installation
 
-- Python 3.6 or higher
-- The [Hugging Face Transformers](https://github.com/huggingface/transformers) library
-- The [PyTorch](https://pytorch.org/) library
+1. Clone the repository:
 
-Once you have installed the dependencies, you can download the pre-trained model weights from the [Codeium Code Model](https://github.com/codeium/codeium-code-model) repository.
+   ```bash
+   git clone https://github.com/VM-Thuan-2003/AI-FIRE-UDP-SOCKET.git
+   cd AI-FIRE-UDP-SOCKET
+   ```
+
+2. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
-To use the code model, you will need to import the `CodeModel` class from the `code_model` module and create an instance of the class. You can then use the instance to make predictions on source code.
+To run the fire detection system, execute the following command:
 
-For example, to use the code model to complete a partial code snippet, you can use the following code:
+```bash
+python main.py
+```
+
+The system will start streaming video from the configured UDP source and display the detection output in a window.
+
+## Examples
+
+### Real-time Detection
+
+Run the system and observe how it detects fire in the video stream. The output will show two windows: one with the original video and another with detection annotations.
+
+### Configuration
+
+You can configure the video source and detection parameters in the `main.py` script to suit your needs.
+
+## Contributing
+
+To contribute to this project, please fork the repository and submit a pull request. For any issues, feel free to open an issue on GitHub.
+
+## License
+
+This project is licensed under the terms of the [MIT License](LICENSE).
+
+## Acknowledgments
+
+Special thanks to the contributors of the libraries and tools used in this project, including OpenCV and PyTorch.
