@@ -43,6 +43,10 @@ class Detector:
 
         frame = frame_payload if self.mode_input == "frame" else frame
 
+        if frame is None:
+            print("Error: Frame is empty.")
+            return None, None
+
         # Preprocess frame
         rgb_frame = self.pre_image(frame)
 
