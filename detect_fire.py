@@ -31,7 +31,6 @@ class Detector:
 
     def detect(self, frame_payload=None):
         """Run the detection loop."""
-        print("Press 'q' to exit.")
         frame = None
 
         if self.mode_input == "webcam":
@@ -45,7 +44,7 @@ class Detector:
         frame = frame_payload if self.mode_input == "frame" else frame
 
         # Preprocess frame
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        rgb_frame = self.pre_image(frame)
 
         # Inference
         with torch.amp.autocast("cuda" if torch.cuda.is_available() else "cpu"):
@@ -53,25 +52,34 @@ class Detector:
 
         # Process results
         detections = results.xyxy[0].cpu().numpy()
-        confidence = 0
-        for *xyxy, conf, cls in detections:
+        labels_confidences = []
+
+        for *xyxy, conf_tmp, cls in detections:
             x1, y1, x2, y2 = map(int, xyxy)
-            label = self.model.names[int(cls)]
-            confidence_exactly = 0.7
-            if conf > confidence_exactly:
-                confidence = conf
+            label_tmp = self.model.names[int(cls)]
+            confidence_threshold = 0.55
+            if conf_tmp > confidence_threshold:
                 # Draw bounding box and label
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(
                     frame,
-                    f"{label} {confidence:.2f}",
+                    f"{label_tmp} {conf_tmp:.2f}",
                     (x1, y1 - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.5,
                     (0, 255, 0),
                     2,
                 )
-        return frame, confidence
+                labels_confidences.append((label_tmp, conf_tmp))
+
+        return frame, labels_confidences
+
+    def pre_image(self, frame):
+        # Convert the frame to RGB
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Return only the RGB frame
+        return rgb_frame
 
 
 if __name__ == "__main__":

@@ -36,8 +36,6 @@ class SocketClient:
 
         self.socket_events.register_events()
 
-        self.data_socket = self.socket_events.event_drone
-
     def connect(self):
         """
         Connect to the server.

@@ -4,7 +4,8 @@ from read_udp import VideoClient
 from cus_socket.socket_client import SocketClient
 
 import cv2
-import time 
+import time
+
 
 class Main:
     def __init__(self):
@@ -14,7 +15,7 @@ class Main:
         self.video_client = VideoClient("http://103.167.198.50:6001", "123456")
         self.client = SocketClient("http://103.167.198.50:5000")
 
-        self.detector = Detector("best.pt", "frame")
+        self.detector = Detector("best.pt", 0)
 
 
 if __name__ == "__main__":
@@ -24,17 +25,31 @@ if __name__ == "__main__":
         main.thread_manager.add_task(main.client.connect)
 
         while True:
-            if main.video_client.frame is not None:
-                frame, con = main.detector.detect(main.video_client.frame)
+            frame, detects = main.detector.detect(
+                main.video_client.frame if main.video_client.frame is not None else None
+            )
 
-                cv2.imshow("Frame", main.video_client.frame)
-                cv2.imshow("Frame and Detect", frame)
-                print(con)
+            # cv2.imshow("Frame", main.video_client.frame)
+            cv2.imshow("Frame and Detect", frame)
 
-                time.sleep(1 / 30)
+            print(detects)
 
-                if cv2.waitKey(1) & 0xFF == ord("q"):
-                    break
+            if len(detects) > 0:
+                for detect in detects:
+                    label = detect[0]
+                    conf = detect[1]
+                    if conf > 0.55:
+                        print(f"Drone: {label} {conf}")
+                        main.client.send_message(
+                            "web",
+                            "drone",
+                            "droneStatus",
+                            f"{label} {conf}",
+                        )
+            time.sleep(1 / 30)
+
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
 
     except KeyboardInterrupt:
         print("\nDetection stopped.")
