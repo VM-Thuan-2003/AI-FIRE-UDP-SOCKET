@@ -5,6 +5,8 @@ from cus_socket.socket_client import SocketClient
 
 import cv2
 import time
+import json
+import numpy as np
 
 
 class Main:
@@ -39,7 +41,7 @@ if __name__ == "__main__":
                 if len(detects) > 0:
                     for detect in detects:
                         label = detect[0]
-                        conf = detect[1]
+                        conf = np.float64(detect[1])
                         if conf > 0.55:
                             print(f"Drone: {label} {conf}")
                             main.client.send_message(
