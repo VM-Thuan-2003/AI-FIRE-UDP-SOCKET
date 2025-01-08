@@ -31,9 +31,11 @@ if __name__ == "__main__":
                 main.video_client.frame if main.video_client.frame is not None else None
             )
 
+            # frame, detects = main.detector.detect(None)
+
             if frame is not None:
 
-                cv2.imshow("Frame", main.video_client.frame)
+                # cv2.imshow("Frame", main.video_client.frame)
                 cv2.imshow("Frame and Detect", frame)
 
                 print(detects)
